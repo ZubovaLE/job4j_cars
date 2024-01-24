@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS posts
 (
     id          SERIAL PRIMARY KEY,
     description TEXT,
-    price       NUMERIC,
+    created     TIMESTAMP,
     car_id      INT NOT NULL REFERENCES cars (id),
+    price       NUMERIC,
+    photo       VARCHAR,
     user_id     INT NOT NULL REFERENCES users (id)
 );
