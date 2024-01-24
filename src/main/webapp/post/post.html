@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var id = window.location.href.split("=")[1];
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/todo/post.do?id=' + id,
+                dataType: 'json'
+            }).done(function (data) {
+                $('#pageHeader h3:last').append(data.car.brand + ' ' + data.car.model);
+                $('#description h4:last').after('<p class="card-text">' + data.description + '</p>');
+                $('#created h4:last').after('<p class="card-text">' + data.created + '</p>');
+                $('#carBrand h4:last').after('<p class="card-text">' + data.brand + '</p>');
+                $('#carModel h4:last').after('<p class="card-text">' + data.model + '</p>');
+                $('#carBody h4:last').after('<p class="card-text">' + data.body + '</p>');
+                $('#price h4:last').after('<p class="card-text">' + data.price + '</p>');
+                $('#photo h4:last').after('<p class="card-text">' + data.photo + '</p>');
+                $('#author h4:last').after('<p class="card-text">' + data.author + '</p>');
+                $('#author h4:last').after('<p class="card-text">' + data.user.name + '</p>');
+            }).fail(function (err) {
+                console.log(err);
+            });
+        });
+
+        function editPost() {
+            var id = window.location.href.split("=")[1];
+            window.location.href = '/todo/item/edit.html?id=' + id;
+        }
+
+        function deletePost() {
+            var id = window.location.href.split("=")[1];
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/todo/post.do?id=' + id,
+            }).done(function () {
+                window.location.replace('/todo/?items=all');
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
+
+    </script>
+    <title>Post</title>
+</head>
+<body>
+<div class="card">
+    <div class="card-header" id="pageHeader" style="text-align: center">
+        <h3></h3>
+    </div>
+    <div class="card-body" id="description">
+        <h4 class="card-title">Описание</h4>
+    </div>
+    <div class="card-body" id="created">
+        <h4 class="card-title">Дата создания</h4>
+    </div>
+    <div class="card-body" id="carBrand">
+        <h4 class="card-title">Бренд</h4>
+    </div>
+    <div class="card-body" id="carModel">
+        <h4 class="card-title">Модель</h4>
+    </div>
+    <div class="card-body" id="carBody">
+        <h4 class="card-title">Тип кузова</h4>
+    </div>
+    <div class="card-body" id="price">
+        <h4 class="card-title">Цена</h4>
+    </div>
+    <div class="card-body" id="photo">
+        <h4 class="card-title">Фото</h4>
+    </div>
+    <div class="card-body" id="author">
+        <h4 class="card-title">Автор</h4>
+    </div>
+    <div class="card-body" id="buttons">
+        <h4 class="card-title">Действия</h4>
+        <button type="button" class="btn btn-primary" title="Отредактировать объявление" onclick="editPost()">
+            Отредактировать
+        </button>
+        <button type="button" class="btn btn-danger" title="Удалить объявление" onclick="deletePost()">Удалить
+        </button>
+    </div>
+</div>
+</body>
+<footer>
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a href="/todo/?posts=all">На главную страницу</a>
+        </li>
+    </ul>
+</footer>
+</html>

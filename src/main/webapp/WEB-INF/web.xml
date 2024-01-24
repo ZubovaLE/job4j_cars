@@ -12,4 +12,12 @@
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index.do</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>PostServlet</servlet-name>
+        <servlet-class>ru.job4j.cars.controller.PostServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostServlet</servlet-name>
+        <url-pattern>/post.do</url-pattern>
+    </servlet-mapping>
 </web-app>

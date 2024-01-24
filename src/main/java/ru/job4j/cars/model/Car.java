@@ -22,7 +22,7 @@ public class Car {
 
     private String brand;
     private String model;
-    private String bodyType;
+    private String body;
 
     @OneToOne
     @JoinColumn(name = "engine_id")
@@ -36,10 +36,11 @@ public class Car {
     })
     private Set<Driver> drivers = new HashSet<>();
 
-    public static Car of(String brand, String model) {
+    public static Car of(String brand, String model, String body) {
         Car car = new Car();
         car.brand = brand;
         car.model = model;
+        car.body = body;
         return car;
     }
 }

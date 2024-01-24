@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS cars
     id        SERIAL PRIMARY KEY,
     brand     VARCHAR(255),
     model     VARCHAR(255),
-    body_type VARCHAR(255),
+    body VARCHAR(255),
     engine_id INT NOT NULL UNIQUE REFERENCES engines (id)
 );
 
