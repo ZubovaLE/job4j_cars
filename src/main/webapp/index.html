@@ -26,18 +26,18 @@
             var posts = window.location.href.split("=")[1];
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8080/todo/index.do?posts=' + posts,
+                url: 'http://localhost:8080/cars/index.do?posts=' + posts,
                 dataType: 'json'
             }).done(function (data) {
                 if (posts === 'new') {
-                    $('#new a:last').replaceWith('<a class="nav-link active" href="/todo/?posts=new">Новые</a>');
-                    $('#all a:last').replaceWith('<a class="nav-link" href="/todo/?posts=all">Все</a>');
+                    $('#new a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=new">Новые</a>');
+                    $('#all a:last').replaceWith('<a class="nav-link" href="/cars/?posts=all">Все</a>');
                 } else {
-                    $('#all a:last').replaceWith('<a class="nav-link active" href="/todo/?posts=all">Все</a>');
-                    $('#new a:last').replaceWith('<a class="nav-link" href="/todo/?posts=new">Новые</a>');
+                    $('#all a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=all">Все</a>');
+                    $('#new a:last').replaceWith('<a class="nav-link" href="/cars/?posts=new">Новые</a>');
                 }
                 for (var post of data) {
-                    $('#posts tr:last').after('<tr><td><a href=' + '/todo/post/description.html?id=' + post.id + '>'
+                    $('#posts tr:last').after('<tr><td><a href=' + '/cars/post/post.html?id=' + post.id + '>'
                         + post.car.brand + ' ' + post.car.model + '</a></td><td>' + post.created + '</td><td>' +
                         post.price + '</td><td>' + post.user.name + '</td></tr>');
                 }
@@ -46,8 +46,8 @@
             });
         });
 
-        function addItem() {
-            window.location.href = '/todo/item/edit.html?id=0';
+        function addPost() {
+            window.location.href = '/cars/post/edit.html?id=0';
         }
     </script>
     <title>Posts</title>
@@ -57,13 +57,13 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li class="nav-item" id="all">
-                <a class="nav-link" href="/todo/?posts=all">Все</a>
+                <a class="nav-link" href="/cars/?posts=all">Все</a>
             </li>
             <li class="nav-item" id="new">
-                <a class="nav-link" href="/todo/?posts=new">Новые</a>
+                <a class="nav-link" href="/cars/?posts=new">Новые</a>
             </li>
             <li class="nav-item" id="logOut">
-                <a class="nav-link" href="/todo/authorization.html">Выйти</a>
+                <a class="nav-link" href="/cars/authorization.html">Выйти</a>
             </li>
         </ul>
     </div>
@@ -85,7 +85,7 @@
     </table>
 </div>
 <div style="text-align: center">
-    <button type="button" class="btn btn-success" onclick="addItem()">+ Добавить объявление</button>
+    <button type="button" class="btn btn-success" onclick="addPost()">+ Добавить объявление</button>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.job4j.cars.model.Car;
 
-import java.util.Collection;
+import java.util.List;
 
 public class CarStore extends AbstractStore<Car> {
 
@@ -33,9 +33,10 @@ public class CarStore extends AbstractStore<Car> {
     }
 
     @Override
-    public Collection<Car> findAll() {
+    public List<Car> findAll() {
         return this.tx(
-                session -> session.createQuery("select distinct c from Car c inner join fetch c.engine e")
+                session -> session.createQuery("select distinct c from Car c inner join fetch c.engine e",
+                                Car.class)
                         .list()
         );
     }

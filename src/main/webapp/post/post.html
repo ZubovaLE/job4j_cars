@@ -26,7 +26,7 @@
             var id = window.location.href.split("=")[1];
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8080/todo/post.do?id=' + id,
+                url: 'http://localhost:8080/cars/post.do?id=' + id,
                 dataType: 'json'
             }).done(function (data) {
                 $('#pageHeader h3:last').append(data.car.brand + ' ' + data.car.model);
@@ -46,16 +46,16 @@
 
         function editPost() {
             var id = window.location.href.split("=")[1];
-            window.location.href = '/todo/item/edit.html?id=' + id;
+            window.location.href = '/cars/item/edit.html?id=' + id;
         }
 
         function deletePost() {
             var id = window.location.href.split("=")[1];
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/todo/post.do?id=' + id,
+                url: 'http://localhost:8080/cars/post.do?id=' + id,
             }).done(function () {
-                window.location.replace('/todo/?items=all');
+                window.location.replace('/cars/?items=all');
             }).fail(function (err) {
                 console.log(err);
             });
@@ -106,7 +106,7 @@
 <footer>
     <ul class="nav justify-content-center">
         <li class="nav-item">
-            <a href="/todo/?posts=all">На главную страницу</a>
+            <a href="/cars/?posts=all">На главную страницу</a>
         </li>
     </ul>
 </footer>
