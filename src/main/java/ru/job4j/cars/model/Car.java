@@ -21,9 +21,9 @@ public class Car {
     @EqualsAndHashCode.Include
     private int id;
 
-    private String brand;
-    private String model;
-    private String body;
+    private Brand brand;
+    private Model model;
+    private Body body;
 
     @OneToOne
     @JoinColumn(name = "engine_id")
@@ -37,7 +37,7 @@ public class Car {
     })
     private Set<Driver> drivers = new HashSet<>();
 
-    public static Car of(String brand, String model, String body) {
+    public static Car of(Brand brand, Model model, Body body) {
         Car car = new Car();
         car.brand = brand;
         car.model = model;

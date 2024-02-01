@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js">
+    </script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css"/>
+
+    <script>
+        $(document).ready(function () {
+            var id = window.location.href.split("=")[1];
+            var pageHeader;
+            var buttonLabel;
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/todo/brand.do',
+                dataType: 'json'
+            }).done(function (data) {
+                var brands = data;
+                if (parseInt(id) === 0) {
+                    pageHeader = 'Создать объявление';
+                    buttonLabel = "Создать";
+                    for (var brand of brands) {
+                        $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
+                    }
+                } else {
+                    pageHeader = 'Редактировать объявление';
+                    buttonLabel = "Редактировать";
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:8080/cars/post.do?id=' + id,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        var brand = data.brand;
+                        var model = data.model;
+
+                        for (var car of cars) {
+                            if (data.brand.some(someBrand => someBrand.name === car.brand)) {
+                                $('#category:last').append('<option value=' + c.id + ' selected >' + c.name + '</option>');
+                            } else {
+                                $('#category:last').append('<option value=' + c.id + '>' + c.name + '</option>');
+                            }
+                        }
+                    }).fail(function (err) {
+                        console.log(err);
+                    });
+                }
+                $('#pageHeader h3:last').append(pageHeader);
+                $('#itemInfo div:last').after('<br><button type="submit" class="btn btn-primary" onclick="return validate()">' +
+                    buttonLabel + '</button>');
+            }).fail(function (err) {
+                console.log(err);
+            });
+        })
+
+        $('select#brand').change(function () {
+            var brand = $(this).val();
+            if (brand !== '') {
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:8080/todo/brand.do?id=' + brand,
+                    dataType: 'json'
+                }).done(function (data) {
+                    for (var model of data) {
+                        $('#model:last').append('<option value=' + model.id + '>' + model.name + '</option>');
+                    }
+                    $('select#model').show();
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            }
+        })
+
+        $('select#model').change(function () {
+            var model = $(this).val();
+            if (model !== '') {
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:8080/todo/model.do?id=' + model,
+                    dataType: 'json'
+                }).done(function (data) {
+                    for (var body of data) {
+                        $('#body:last').append('<option value=' + body.id + '>' + body.name + '</option>');
+                    }
+                    $('select#body').show();
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            }
+        })
+
+            function validate() {
+                if ($('#description').val() === '' || $('#brand option:selected').length < 1
+                    || $('#model option:selected').length < 1 || $('#body option:selected').length < 1) {
+                    alert('Заполните все поля!');
+                    return false;
+                } else {
+                    createOrUpdatePost();
+                    return true;
+                }
+            }
+
+            function createOrUpdatePost() {
+                var id = window.location.href.split("=")[1];
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8080/todo/edit.do?id=' + id,
+                    data: $('#postInfo').serialize()
+                }).done(function () {
+                    window.location.replace('/cars/?posts=all');
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            }
+
+    </script>
+    <title>Editing</title>
+</head>
+<body>
+<div class="container">
+    <div class="row pt-3" id="pageHeader">
+        <h3></h3>
+    </div>
+    <form id="postInfo">
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <input type="text" class="form-control" id="description" name="description" value=""
+                   placeholder="Опишите машину"/>
+        </div>
+        <div class="form-group">
+            <label for="brand">Марка</label>
+            <select id="brand" name="brand">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="model">Модель</label>
+            <select id="model" name="model" style="display:none;">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="body">Тип кузова</label>
+            <select id="body" name="body" style="display:none;">
+            </select>
+        </div>
+    </form>
+</div>
+</body>
+<footer>
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a href="/cars/?posts=all">На главную страницу</a>
+        </li>
+    </ul>
+</footer>
+</html>

@@ -28,4 +28,12 @@
         <servlet-name>CarServlet</servlet-name>
         <url-pattern>/cars.do</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>BrandServlet</servlet-name>
+        <servlet-class>ru.job4j.cars.controller.BrandServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BrandServlet</servlet-name>
+        <url-pattern>/brand.do</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -35,7 +35,11 @@ public class CarStore extends AbstractStore<Car> {
     @Override
     public List<Car> findAll() {
         return this.tx(
-                session -> session.createQuery("select distinct c from Car c inner join fetch c.engine e",
+                session -> session.createQuery("select distinct c from Car c " +
+                                        "join fetch c.engine e " +
+                                        "join fetch c.brand b " +
+                                        "join fetch c.model m " +
+                                        "join fetch c.body bd ",
                                 Car.class)
                         .list()
         );
