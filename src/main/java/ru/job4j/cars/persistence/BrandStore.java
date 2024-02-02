@@ -3,7 +3,6 @@ package ru.job4j.cars.persistence;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.job4j.cars.model.Brand;
-import ru.job4j.cars.model.Model;
 
 import java.util.List;
 
@@ -15,10 +14,11 @@ public class BrandStore {
     }
 
     public List<Brand> findAll() {
+        List<Brand> brands;
         Session session = sf.openSession();
         session.beginTransaction();
-        List<Brand> brands = session.createQuery("select distinct b from Brand b " +
-                        "join fetch b.models  ",
+        brands = session.createQuery("select distinct b from Brand b " +
+                        "join fetch b.models m ",
                 Brand.class).list();
         session.getTransaction().commit();
         session.close();
@@ -26,11 +26,13 @@ public class BrandStore {
     }
 
     public Brand findById(int id) {
+        Brand brand;
         Session session = sf.openSession();
-        Brand brand = session.createQuery("select distinct b from Brand b " +
-                        "join fetch b.models  " +
-                        "where b.id = :bId ",
-                Brand.class)
+        session.beginTransaction();
+        brand = session.createQuery("select distinct b from Brand b " +
+                                "join fetch b.models m " +
+                                "where b.id = :bId ",
+                        Brand.class)
                 .setParameter("bId", id)
                 .uniqueResult();
         session.getTransaction().commit();

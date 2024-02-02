@@ -28,9 +28,8 @@ public class ModelStore implements Findable<Model> {
     @Override
     public Model findById(int id) {
         Session session = sf.openSession();
-        Model model = session.createQuery("select distinct m from Model m " +
-                                "join fetch m.bodies  " +
-                                "where m.id = :mId ",
+        session.beginTransaction();
+        Model model = session.createQuery("from Model where id = :mId ",
                         Model.class)
                 .setParameter("mId", id)
                 .uniqueResult();

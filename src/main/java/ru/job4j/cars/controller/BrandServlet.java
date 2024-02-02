@@ -17,9 +17,9 @@ public class BrandServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json; charset=utf-8");
-        String id = req.getParameter("id");
-        if (id != null) {
-            Brand brand = brandService.findById(Integer.parseInt(id));
+        int id = Integer.parseInt(req.getParameter("id"));
+        if (id != 0) {
+            Brand brand = brandService.findById(id);
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonFromBrandModels = objectMapper.writeValueAsString(brand.getModels());
             resp.getWriter().write(jsonFromBrandModels);

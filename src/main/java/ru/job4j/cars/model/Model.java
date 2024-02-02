@@ -23,11 +23,11 @@ public class Model {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "models_bodies", joinColumns = {
-            @JoinColumn(name = "body_id", nullable = false)
-    }, inverseJoinColumns = {
             @JoinColumn(name = "model_id", nullable = false)
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "body_id", nullable = false)
     })
     private List<Body> bodies = new ArrayList<>();
 

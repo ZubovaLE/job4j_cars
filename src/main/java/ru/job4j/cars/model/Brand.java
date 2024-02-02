@@ -25,9 +25,9 @@ public class Brand {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "brands_models", joinColumns = {
-            @JoinColumn(name = "model_id", nullable = false)
+            @JoinColumn(name = "brand_id", nullable = false)
     }, inverseJoinColumns = {
-            @JoinColumn(name = "brand_id")
+            @JoinColumn(name = "model_id")
     })
     private List<Model> models = new ArrayList<>();
 

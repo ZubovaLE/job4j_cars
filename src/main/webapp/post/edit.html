@@ -26,7 +26,6 @@
     </script>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css"/>
-
     <script>
         $(document).ready(function () {
             var id = window.location.href.split("=")[1];
@@ -34,14 +33,13 @@
             var buttonLabel;
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8080/todo/brand.do',
+                url: 'http://localhost:8080/cars/brand.do?id=' + id,
                 dataType: 'json'
             }).done(function (data) {
-                var brands = data;
                 if (parseInt(id) === 0) {
                     pageHeader = 'Создать объявление';
                     buttonLabel = "Создать";
-                    for (var brand of brands) {
+                    for (var brand of data) {
                         $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
                     }
                 } else {
@@ -54,85 +52,80 @@
                     }).done(function (data) {
                         var brand = data.brand;
                         var model = data.model;
-
-                        for (var car of cars) {
-                            if (data.brand.some(someBrand => someBrand.name === car.brand)) {
-                                $('#category:last').append('<option value=' + c.id + ' selected >' + c.name + '</option>');
-                            } else {
-                                $('#category:last').append('<option value=' + c.id + '>' + c.name + '</option>');
-                            }
-                        }
+                        // for (var car of cars) {
+                        //     if (data.brand.some(someBrand => someBrand.name === car.brand)) {
+                        //         $('#category:last').append('<option value=' + c.id + ' selected >' + c.name + '</option>');
+                        //     } else {
+                        //         $('#category:last').append('<option value=' + c.id + '>' + c.name + '</option>');
+                        //     }
+                        // }
                     }).fail(function (err) {
                         console.log(err);
                     });
                 }
                 $('#pageHeader h3:last').append(pageHeader);
-                $('#itemInfo div:last').after('<br><button type="submit" class="btn btn-primary" onclick="return validate()">' +
+                $('#postInfo div:last').after('<br><button type="submit" class="btn btn-primary" onclick="return validate()">' +
                     buttonLabel + '</button>');
             }).fail(function (err) {
                 console.log(err);
             });
         })
 
-        $('select#brand').change(function () {
-            var brand = $(this).val();
-            if (brand !== '') {
-                $.ajax({
-                    type: 'GET',
-                    url: 'http://localhost:8080/todo/brand.do?id=' + brand,
-                    dataType: 'json'
-                }).done(function (data) {
-                    for (var model of data) {
-                        $('#model:last').append('<option value=' + model.id + '>' + model.name + '</option>');
-                    }
-                    $('select#model').show();
-                }).fail(function (err) {
-                    console.log(err);
-                });
-            }
-        })
-
-        $('select#model').change(function () {
-            var model = $(this).val();
-            if (model !== '') {
-                $.ajax({
-                    type: 'GET',
-                    url: 'http://localhost:8080/todo/model.do?id=' + model,
-                    dataType: 'json'
-                }).done(function (data) {
-                    for (var body of data) {
-                        $('#body:last').append('<option value=' + body.id + '>' + body.name + '</option>');
-                    }
-                    $('select#body').show();
-                }).fail(function (err) {
-                    console.log(err);
-                });
-            }
-        })
-
-            function validate() {
-                if ($('#description').val() === '' || $('#brand option:selected').length < 1
-                    || $('#model option:selected').length < 1 || $('#body option:selected').length < 1) {
-                    alert('Заполните все поля!');
-                    return false;
-                } else {
-                    createOrUpdatePost();
-                    return true;
+        function showModelDiv() {
+            var brand = $("#brand").val();
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/brand.do?id=' + brand,
+                dataType: 'json'
+            }).done(function (data) {
+                $('#modelDiv').show();
+                for (var model of data) {
+                    $('#model:last').append('<option value=' + model.id + '>' + model.name + '</option>');
                 }
-            }
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
 
-            function createOrUpdatePost() {
-                var id = window.location.href.split("=")[1];
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:8080/todo/edit.do?id=' + id,
-                    data: $('#postInfo').serialize()
-                }).done(function () {
-                    window.location.replace('/cars/?posts=all');
-                }).fail(function (err) {
-                    console.log(err);
-                });
+        function showBodyDiv() {
+            var model = $("#model").val();
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/model.do?id=' + model,
+                dataType: 'json'
+            }).done(function (data) {
+                $('#bodyDiv').show();
+                for (var body of data) {
+                    $('#body:last').append('<option value=' + body.id + '>' + body.name + '</option>');
+                }
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
+
+        function validate() {
+            if ($('#description').val() === '' || $('#brand option:selected').length < 1
+                || $('#model option:selected').length < 1 || $('#body option:selected').length < 1) {
+                alert('Заполните все поля!');
+                return false;
+            } else {
+                createOrUpdatePost();
+                return true;
             }
+        }
+
+        function createOrUpdatePost() {
+            var id = window.location.href.split("=")[1];
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/todo/edit.do?id=' + id,
+                data: $('#postInfo').serialize()
+            }).done(function () {
+                window.location.replace('/cars/?posts=all');
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
 
     </script>
     <title>Editing</title>
@@ -150,17 +143,15 @@
         </div>
         <div class="form-group">
             <label for="brand">Марка</label>
-            <select id="brand" name="brand">
-            </select>
+            <select id="brand" name="brand" onchange="showModelDiv()"></select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="modelDiv" style="display:none;">
             <label for="model">Модель</label>
-            <select id="model" name="model" style="display:none;">
-            </select>
+            <select id="model" name="model" onchange="showBodyDiv()"></select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="bodyDiv" style="display:none;">
             <label for="body">Тип кузова</label>
-            <select id="body" name="body" style="display:none;">
+            <select id="body" name="body">
             </select>
         </div>
     </form>

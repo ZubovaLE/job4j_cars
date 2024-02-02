@@ -36,4 +36,12 @@
         <servlet-name>BrandServlet</servlet-name>
         <url-pattern>/brand.do</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ModelServlet</servlet-name>
+        <servlet-class>ru.job4j.cars.controller.ModelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ModelServlet</servlet-name>
+        <url-pattern>/model.do</url-pattern>
+    </servlet-mapping>
 </web-app>
