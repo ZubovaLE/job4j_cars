@@ -3,7 +3,7 @@ package ru.job4j.cars.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.job4j.cars.model.Post;
 import ru.job4j.cars.service.Service;
-import ru.job4j.cars.service.ToDoService;
+import ru.job4j.cars.service.PostService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class PostServlet extends HttpServlet {
-    private final Service<Post> toDoService = ToDoService.instOf();
+    private final Service<Post> toDoService = PostService.instOf();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -6,14 +6,14 @@ import ru.job4j.cars.persistence.PostStore;
 
 import java.util.List;
 
-public class ToDoService implements Service<Post> {
+public class PostService implements Service<Post> {
     private final PostStore postStore = new PostStore(SessionFactoryInitializer.instOf().getSf());
 
     private static final class Lazy {
-        private static final ToDoService INST = new ToDoService();
+        private static final PostService INST = new PostService();
     }
 
-    public static ToDoService instOf() {
+    public static PostService instOf() {
         return Lazy.INST;
     }
 

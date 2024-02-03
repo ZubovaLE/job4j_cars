@@ -42,6 +42,7 @@
                     for (var brand of data) {
                         $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
                     }
+                    showModelDiv();
                 } else {
                     pageHeader = 'Редактировать объявление';
                     buttonLabel = "Редактировать";
@@ -78,11 +79,13 @@
                 url: 'http://localhost:8080/cars/brand.do?id=' + brand,
                 dataType: 'json'
             }).done(function (data) {
-                $('#modelDiv').show();
-                for (var model of data) {
-                    $('#model:last').append('<option value=' + model.id + '>' + model.name + '</option>');
+                    $('#modelDiv').show();
+                    var modelSelection = $('#model');
+                    for (var model of data) {
+                        modelSelection.append('<option value=' + model.id + '>' + model.name + '</option>');
+                    }
                 }
-            }).fail(function (err) {
+            ).fail(function (err) {
                 console.log(err);
             });
         }
@@ -153,6 +156,10 @@
             <label for="body">Тип кузова</label>
             <select id="body" name="body">
             </select>
+        </div>
+        <div class="form-group">
+            <label for="price">Цена</label>
+            <input type="text" class="form-control" id="price" name="price" value=""/>
         </div>
     </form>
 </div>

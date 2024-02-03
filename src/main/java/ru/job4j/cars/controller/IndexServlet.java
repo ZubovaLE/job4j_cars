@@ -2,7 +2,7 @@ package ru.job4j.cars.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.job4j.cars.model.Post;
-import ru.job4j.cars.service.ToDoService;
+import ru.job4j.cars.service.PostService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class IndexServlet extends HttpServlet {
-    private final ToDoService toDoService = ToDoService.instOf();
+    private final PostService postService = PostService.instOf();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -20,9 +20,9 @@ public class IndexServlet extends HttpServlet {
         String listType = req.getParameter("posts");
         List<Post> posts;
         if (listType.equals("new")) {
-            posts = toDoService.findNewPosts();
+            posts = postService.findNewPosts();
         } else {
-            posts = toDoService.findAll();
+            posts = postService.findAll();
         }
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonFromPosts = objectMapper.writeValueAsString(posts);
