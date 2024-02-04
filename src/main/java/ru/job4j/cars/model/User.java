@@ -28,4 +28,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Post> posts = new HashSet<>();
+
+    public static User of(String name, String email, String password, String phone) {
+        User user = new User();
+        user.name = name;
+        user.email = email;
+        user.password = password;
+        user.phone = phone;
+        return user;
+    }
 }

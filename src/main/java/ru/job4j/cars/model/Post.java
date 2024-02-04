@@ -24,18 +24,21 @@ public class Post {
     @JoinColumn(name = "car_id")
     private Car car;
 
-    private double price;
+    private int price;
 
     private String photo;
+
+    private boolean sold;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post of(String description, double price) {
+    public static Post of(String description, int price) {
         Post post = new Post();
         post.description = description;
         post.price = price;
+        post.sold = false;
         return post;
     }
 

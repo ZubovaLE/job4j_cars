@@ -29,6 +29,7 @@
                 url: 'http://localhost:8080/cars/post.do?id=' + id,
                 dataType: 'json'
             }).done(function (data) {
+                var done = data.sold ? 'Продано' : 'Не продано';
                 var postPhoto = data.photo;
                 var photo = postPhoto == null ? "Нет" : postPhoto;
                 $('#pageHeader h3:last').append(data.car.brand + ' ' + data.car.model);
@@ -39,27 +40,34 @@
                 $('#carBody h4:last').after('<p class="card-text">' + data.body + '</p>');
                 $('#price h4:last').after('<p class="card-text">' + data.price + '</p>');
                 $('#photo h4:last').after('<p class="card-text">' + photo + '</p>');
-                $('#author h4:last').after('<p class="card-text">' + data.author + '</p>');
                 $('#author h4:last').after('<p class="card-text">' + data.user.name + '</p>');
+                $('#status h4:last').after('<p class="card-text">' + done + '</p>');
             }).fail(function (err) {
                 console.log(err);
             });
         });
 
-        function editPost() {
+        function markAsSold() {
             var id = window.location.href.split("=")[1];
-            window.location.href = '/cars/item/edit.html?id=' + id;
+            $.ajax({
+                method: 'POST',
+                url: 'http://localhost:8080/cars/post.do?id=' + id
+            }).done(function () {
+                $('#status p:last').replaceWith('<p class="card-text">' + 'Продано' + '</p>');
+            }).fail(function (err) {
+                alert('Вы не обладаете должными правами');
+            });
         }
 
         function deletePost() {
             var id = window.location.href.split("=")[1];
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/cars/post.do?id=' + id,
+                url: 'http://localhost:8080/cars/post.do?id=' + id + '&delete=true',
             }).done(function () {
-                window.location.replace('/cars/?items=all');
+                window.location.replace('/cars/?posts=all');
             }).fail(function (err) {
-                console.log(err);
+                alert('Вы не обладаете должными правами');
             });
         }
 
@@ -95,9 +103,12 @@
     <div class="card-body" id="author">
         <h4 class="card-title">Автор</h4>
     </div>
+    <div class="card-body" id="status">
+        <h4 class="card-title">Состояние</h4>
+    </div>
     <div class="card-body" id="buttons">
         <h4 class="card-title">Действия</h4>
-        <button type="button" class="btn btn-primary" title="Отредактировать объявление" onclick="editPost()">
+        <button type="button" class="btn btn-primary" title="Пометить как продано" onclick="markAsSold()">
             Отредактировать
         </button>
         <button type="button" class="btn btn-danger" title="Удалить объявление" onclick="deletePost()">Удалить

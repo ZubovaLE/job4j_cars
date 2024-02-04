@@ -42,7 +42,6 @@
                     for (var brand of data) {
                         $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
                     }
-                    showModelDiv();
                 } else {
                     pageHeader = 'Редактировать объявление';
                     buttonLabel = "Редактировать";
@@ -112,16 +111,16 @@
                 alert('Заполните все поля!');
                 return false;
             } else {
-                createOrUpdatePost();
+                createPost();
                 return true;
             }
         }
 
-        function createOrUpdatePost() {
+        function createPost() {
             var id = window.location.href.split("=")[1];
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/todo/edit.do?id=' + id,
+                url: 'http://localhost:8080/card/edit.do?id=' + id,
                 data: $('#postInfo').serialize()
             }).done(function () {
                 window.location.replace('/cars/?posts=all');
@@ -130,12 +129,19 @@
             });
         }
 
+        function hideOrShowPhotoInput() {
+            if ($('#photoCheckbox').checked === true) {
+                $('#photoDiv').show();
+            } else {
+                $('#photoDiv').hide();
+            }
+        }
     </script>
     <title>Editing</title>
 </head>
 <body>
 <div class="container">
-    <div class="row pt-3" id="pageHeader">
+    <div class="row pt-3" id="pageHeader" style="text-align: center">
         <h3></h3>
     </div>
     <form id="postInfo">
@@ -159,7 +165,14 @@
         </div>
         <div class="form-group">
             <label for="price">Цена</label>
-            <input type="text" class="form-control" id="price" name="price" value=""/>
+            <input type="number" class="form-control" id="price" name="price" value=""/>
+        </div>
+        <div class="form-group">
+            <label for="photoCheckbox">Добавить фото</label>
+            <input type="checkbox" onchange="hideOrShowPhotoInput()" id="photoCheckbox"/>
+        </div>
+        <div class="form-group" id="photoDiv" style="display: none">
+            <input type="file" name="photo" id="photo">
         </div>
     </form>
 </div>
