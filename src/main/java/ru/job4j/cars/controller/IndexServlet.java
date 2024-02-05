@@ -17,12 +17,14 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json; charset=utf-8");
-        String listType = req.getParameter("posts");
+        String postsParam = req.getParameter("posts");
         List<Post> posts;
-        if (listType.equals("new")) {
+        if (postsParam.equals("new")) {
             posts = postService.findNewPosts();
-        } else {
+        } else if (postsParam.equals("all")) {
             posts = postService.findAll();
+        } else {
+            posts = postService.findPostsWithBrand(Integer.parseInt(postsParam));
         }
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonFromPosts = objectMapper.writeValueAsString(posts);

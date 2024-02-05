@@ -81,12 +81,12 @@ public class PostStore extends AbstractStore<Post> {
         );
     }
 
-    public List<Post> findPostsWithBrand(String brand) {
+    public List<Post> findPostsWithBrand(int brandId) {
         return this.tx(
                 session -> session.createQuery("select distinct p from Post p " +
                         "join fetch p.car c " +
                         "join fetch p.user u " +
-                        "where c.brand = :cBrand", Post.class).setParameter("cBrand", brand).list()
+                        "where c.id = :cBrandId", Post.class).setParameter("cBrandId", brandId).list()
         );
     }
 }

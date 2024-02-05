@@ -60,6 +60,14 @@
         <servlet-name>ModelServlet</servlet-name>
         <url-pattern>/model.do</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>EditServlet</servlet-name>
+        <servlet-class>ru.job4j.cars.controller.EditServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditServlet</servlet-name>
+        <url-pattern>/edit.do</url-pattern>
+    </servlet-mapping>
 <!--    <filter>-->
 <!--        <filter-name>AuthFilter</filter-name>-->
 <!--        <filter-class>ru.job4j.cars.filter.AuthFilter</filter-class>-->

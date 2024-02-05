@@ -20,6 +20,12 @@ public class BrandStore {
         brands = session.createQuery("select distinct b from Brand b " +
                         "join fetch b.models m ",
                 Brand.class).list();
+
+        brands = session.createQuery("select distinct b from Brand b " +
+                        "join fetch b.engines e where b in :brands", Brand.class)
+                .setParameter("brands", brands)
+                .list();
+
         session.getTransaction().commit();
         session.close();
         return brands;
@@ -35,6 +41,12 @@ public class BrandStore {
                         Brand.class)
                 .setParameter("bId", id)
                 .uniqueResult();
+
+        brand = session.createQuery("select distinct b from Brand b " +
+                        "join fetch b.engines e where b in :brand", Brand.class)
+                .setParameter("brand", brand)
+                .uniqueResult();
+
         session.getTransaction().commit();
         session.close();
         return brand;

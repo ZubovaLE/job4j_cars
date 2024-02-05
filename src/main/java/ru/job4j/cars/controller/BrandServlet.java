@@ -21,8 +21,8 @@ public class BrandServlet extends HttpServlet {
         if (id != 0) {
             Brand brand = brandService.findById(id);
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonFromBrandModels = objectMapper.writeValueAsString(brand.getModels());
-            resp.getWriter().write(jsonFromBrandModels);
+            String jsonFromBrand = objectMapper.writeValueAsString(brand);
+            resp.getWriter().write(jsonFromBrand);
         } else {
             List<Brand> brands = brandService.findAll();
             ObjectMapper objectMapper = new ObjectMapper();

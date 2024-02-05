@@ -25,6 +25,7 @@ public class EditServlet extends HttpServlet {
     private final ModelService modelService = ModelService.instOf();
     private final BodyService bodyService = BodyService.instOf();
     private final CarService carService = CarService.instOf();
+    private final EngineService engineService = EngineService.instOf();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +39,7 @@ public class EditServlet extends HttpServlet {
             User user = (User) req.getSession().getAttribute("user");
             Post post = Post.of(description, price);
             Car car = Car.of(brandService.findById(brand), modelService.findById(model),
-                    bodyService.findById(body));
+                    bodyService.findById(body), engineService.findById(Integer.parseInt(req.getParameter("engine"))));
             carService.add(car);
             post.setCar(car);
             post.setUser(user);

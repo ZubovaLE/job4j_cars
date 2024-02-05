@@ -45,11 +45,12 @@ public class Car {
     })
     private Set<Driver> drivers = new HashSet<>();
 
-    public static Car of(Brand brand, Model model, Body body) {
+    public static Car of(Brand brand, Model model, Body body, Engine engine) {
         Car car = new Car();
         car.brand = brand;
         car.model = model;
         car.body = body;
+        car.engine = engine;
         return car;
     }
 }

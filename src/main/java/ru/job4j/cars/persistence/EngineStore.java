@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.job4j.cars.model.Engine;
 
-import java.util.Collection;
+import java.util.List;
 
 public class EngineStore extends AbstractStore<Engine> {
     public EngineStore(SessionFactory sf) {
@@ -32,9 +32,9 @@ public class EngineStore extends AbstractStore<Engine> {
     }
 
     @Override
-    public Collection<Engine> findAll() {
+    public List<Engine> findAll() {
         return this.tx(
-                session -> session.createQuery("from Engine ")
+                session -> session.createQuery("from Engine ", Engine.class)
                         .list()
         );
     }

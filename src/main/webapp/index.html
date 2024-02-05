@@ -29,22 +29,52 @@
                 url: 'http://localhost:8080/cars/index.do?posts=' + posts,
                 dataType: 'json'
             }).done(function (data) {
-                if (posts === 'new') {
-                    $('#new a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=new">Новые</a>');
-                    $('#all a:last').replaceWith('<a class="nav-link" href="/cars/?posts=all">Все</a>');
-                } else {
-                    $('#all a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=all">Все</a>');
-                    $('#new a:last').replaceWith('<a class="nav-link" href="/cars/?posts=new">Новые</a>');
-                }
                 for (var post of data) {
                     $('#posts tr:last').after('<tr><td><a href=' + '/cars/post/post.html?id=' + post.id + '>'
                         + post.car.brand + ' ' + post.car.model + '</a></td><td>' + post.created + '</td><td>' +
-                        post.price + '</td><td>' + post.user.name +'</td><td>' + post.sold + '</td></tr>');
+                        post.price + '</td><td>' + post.user.name + '</td><td>' + post.sold + '</td></tr>');
+                }
+                if (posts === 'new') {
+                    $('#new a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=new">Новые</a>');
+                    $('#all a:last').replaceWith('<a class="nav-link" href="/cars/?posts=all">Все</a>');
+                    $('#brandDiv').hide();
+                } else if (posts === 'all') {
+                    $('#all a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=all">Все</a>');
+                    $('#new a:last').replaceWith('<a class="nav-link" href="/cars/?posts=new">Новые</a>');
+                    $('#brandDiv').show();
+                    showBrands("0");
+                } else {
+                    $('#all a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=all">Все</a>');
+                    $('#new a:last').replaceWith('<a class="nav-link" href="/cars/?posts=new">Новые</a>');
+                    showBrands(posts);
                 }
             }).fail(function (err) {
                 console.log(err);
             });
         });
+
+        function showBrands(id) {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/brand.do?id=0',
+                dataType: 'json'
+            }).done(function (data) {
+                for (var brand of data) {
+                    if (brand.id === parseInt(id)) {
+                        $('#brandSelection:last').append('<option selected value=' + brand.id + '>' + brand.name + '</option>');
+                    } else {
+                        $('#brandSelection:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
+                    }
+                }
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
+
+        function showCarsWithBrand() {
+            var brand = $("#brandSelection").val();
+            window.location.href = "/cars/?posts=" + brand;
+        }
 
         function addPost() {
             window.location.href = '/cars/post/edit.html?id=0';
@@ -54,7 +84,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
+    <div class="page-header" style="text-align: left">
         <ul class="nav nav-tabs">
             <li class="nav-item" id="all">
                 <a class="nav-link" href="/cars/?posts=all">Все</a>
@@ -62,14 +92,19 @@
             <li class="nav-item" id="new">
                 <a class="nav-link" href="/cars/?posts=new">Новые</a>
             </li>
-            <li class="nav-item" id="logOut">
+            <li class="nav-item" id="logOut" style="text-align: right">
                 <a class="nav-link" href="/cars/authorization.html">Выйти</a>
             </li>
         </ul>
     </div>
     <table class="table" id="posts">
-        <div class=table-header style="text-align: center">
-            <h3>Объявления</h3>
+        <div class=table-header style="text-align: right">
+            <h3 style="text-align: center">Объявления</h3>
+            <div id="brandDiv">
+                <select id="brandSelection" name="brandSelection" onchange="showCarsWithBrand()" style="display: block">
+                    <option value="0">Все марки</option>
+                </select>
+            </div>
         </div>
         <thead>
         <tr>

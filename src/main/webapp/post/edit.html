@@ -36,32 +36,10 @@
                 url: 'http://localhost:8080/cars/brand.do?id=' + id,
                 dataType: 'json'
             }).done(function (data) {
-                if (parseInt(id) === 0) {
-                    pageHeader = 'Создать объявление';
-                    buttonLabel = "Создать";
-                    for (var brand of data) {
-                        $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
-                    }
-                } else {
-                    pageHeader = 'Редактировать объявление';
-                    buttonLabel = "Редактировать";
-                    $.ajax({
-                        type: 'GET',
-                        url: 'http://localhost:8080/cars/post.do?id=' + id,
-                        dataType: 'json'
-                    }).done(function (data) {
-                        var brand = data.brand;
-                        var model = data.model;
-                        // for (var car of cars) {
-                        //     if (data.brand.some(someBrand => someBrand.name === car.brand)) {
-                        //         $('#category:last').append('<option value=' + c.id + ' selected >' + c.name + '</option>');
-                        //     } else {
-                        //         $('#category:last').append('<option value=' + c.id + '>' + c.name + '</option>');
-                        //     }
-                        // }
-                    }).fail(function (err) {
-                        console.log(err);
-                    });
+                pageHeader = 'Создать объявление';
+                buttonLabel = "Создать";
+                for (var brand of data) {
+                    $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
                 }
                 $('#pageHeader h3:last').append(pageHeader);
                 $('#postInfo div:last').after('<br><button type="submit" class="btn btn-primary" onclick="return validate()">' +
@@ -71,7 +49,7 @@
             });
         })
 
-        function showModelDiv() {
+        function showModelAndEngineDiv() {
             var brand = $("#brand").val();
             $.ajax({
                 type: 'GET',
@@ -79,14 +57,25 @@
                 dataType: 'json'
             }).done(function (data) {
                     $('#modelDiv').show();
-                    var modelSelection = $('#model');
-                    for (var model of data) {
-                        modelSelection.append('<option value=' + model.id + '>' + model.name + '</option>');
-                    }
+                    $('#engineDiv').show();
+                    fillModelOptions(data.models);
+                    fillEngineOptions(data.engines);
                 }
             ).fail(function (err) {
                 console.log(err);
             });
+        }
+
+        function fillModelOptions(models) {
+            for (var model of models) {
+                $('#model').append('<option value=' + model.id + '>' + model.name + '</option>');
+            }
+        }
+
+        function fillEngineOptions(engines) {
+            for (var engine of engines) {
+                $('#engine').append('<option value=' + engine.id + '>' + engine.name + '</option>');
+            }
         }
 
         function showBodyDiv() {
@@ -106,8 +95,8 @@
         }
 
         function validate() {
-            if ($('#description').val() === '' || $('#brand option:selected').length < 1
-                || $('#model option:selected').length < 1 || $('#body option:selected').length < 1) {
+            if ($('#description').val() === '' || $('#brand').val() === '0' || $('#model').val() === '0' ||
+                $('#body').val() === '0' || $('#engine').val() === '0' || $('#price').val() === '') {
                 alert('Заполните все поля!');
                 return false;
             } else {
@@ -120,7 +109,7 @@
             var id = window.location.href.split("=")[1];
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/card/edit.do?id=' + id,
+                url: 'http://localhost:8080/cars/edit.do?id=' + id,
                 data: $('#postInfo').serialize()
             }).done(function () {
                 window.location.replace('/cars/?posts=all');
@@ -130,11 +119,11 @@
         }
 
         function hideOrShowPhotoInput() {
-            if ($('#photoCheckbox').checked === true) {
-                $('#photoDiv').show();
-            } else {
-                $('#photoDiv').hide();
-            }
+            // if ($('#photoCheckbox').checked) {
+            $('#photo').show();
+            // } else {
+            //     $('#photo').hide();
+            // }
         }
     </script>
     <title>Editing</title>
@@ -148,31 +137,42 @@
         <div class="form-group">
             <label for="description">Описание</label>
             <input type="text" class="form-control" id="description" name="description" value=""
-                   placeholder="Опишите машину"/>
+                   placeholder="Опишите машину" required/>
         </div>
         <div class="form-group">
             <label for="brand">Марка</label>
-            <select id="brand" name="brand" onchange="showModelDiv()"></select>
+            <select id="brand" name="brand" onchange="showModelAndEngineDiv()">
+                <option value="0">Не выбрано</option>
+            </select>
+        </div>
+        <div class="form-group" id="engineDiv" style="display:none;">
+            <label for="engine">Двигатель</label>
+            <select id="engine" name="engine">
+                <option value="0">Не выбрано</option>
+            </select>
         </div>
         <div class="form-group" id="modelDiv" style="display:none;">
             <label for="model">Модель</label>
-            <select id="model" name="model" onchange="showBodyDiv()"></select>
+            <select id="model" name="model" onchange="showBodyDiv()">
+                <option value="0">Не выбрано</option>
+            </select>
         </div>
         <div class="form-group" id="bodyDiv" style="display:none;">
             <label for="body">Тип кузова</label>
             <select id="body" name="body">
+                <option value="0">Не выбрано</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="price">Цена</label>
-            <input type="number" class="form-control" id="price" name="price" value=""/>
+            <label for="price">Цена, руб</label>
+            <input type="number" class="form-control" id="price" name="price" required/>
         </div>
         <div class="form-group">
             <label for="photoCheckbox">Добавить фото</label>
-            <input type="checkbox" onchange="hideOrShowPhotoInput()" id="photoCheckbox"/>
+            <input type="checkbox" onselect="hideOrShowPhotoInput()" id="photoCheckbox"/>
         </div>
-        <div class="form-group" id="photoDiv" style="display: none">
-            <input type="file" name="photo" id="photo">
+        <div class="form-group" id="photoDiv">
+            <input type="file" name="photo" id="photo" style="display: none">
         </div>
     </form>
 </div>

@@ -31,6 +31,14 @@ public class Brand {
     })
     private List<Model> models = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "brands_engines", joinColumns = {
+            @JoinColumn(name = "brand_id", nullable = false)
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "engine_id")
+    })
+    private List<Engine> engines = new ArrayList<>();
+
     public static Brand of(String name) {
         Brand brand = new Brand();
         brand.name = name;

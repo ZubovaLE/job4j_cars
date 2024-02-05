@@ -23,6 +23,13 @@ CREATE TABLE IF NOT EXISTS brands_models
     model_id INT NOT NULL REFERENCES models (id)
 );
 
+CREATE TABLE IF NOT EXISTS brands_engines
+(
+    id       SERIAL PRIMARY KEY,
+    brand_id INT NOT NULL REFERENCES brands (id),
+    engine_id INT NOT NULL REFERENCES engines (id)
+);
+
 CREATE TABLE IF NOT EXISTS bodies
 (
     id   SERIAL PRIMARY KEY,

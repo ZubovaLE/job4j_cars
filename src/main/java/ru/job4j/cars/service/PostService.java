@@ -31,6 +31,10 @@ public class PostService implements Service<Post> {
         return postStore.findNewPosts();
     }
 
+    public List<Post> findPostsWithBrand(int brandId) {
+        return postStore.findPostsWithBrand(brandId);
+    }
+
     @Override
     public Post findById(int id) {
         return postStore.findById(id);
