@@ -32,6 +32,7 @@
         }
 
         function enter() {
+            var email = $('#email').val();
             $.ajax({
                 url: 'http://localhost:8080/cars/authorization.do',
                 method: 'post',

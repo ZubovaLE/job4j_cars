@@ -18,7 +18,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AuthorizationServlet</servlet-name>
-        <url-pattern>/auth.do</url-pattern>
+        <url-pattern>/authorization.do</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
@@ -26,7 +26,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>RegistrationServlet</servlet-name>
-        <url-pattern>/reg.do</url-pattern>
+        <url-pattern>/registration.do</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>PostServlet</servlet-name>
@@ -68,12 +68,4 @@
         <servlet-name>EditServlet</servlet-name>
         <url-pattern>/edit.do</url-pattern>
     </servlet-mapping>
-<!--    <filter>-->
-<!--        <filter-name>AuthFilter</filter-name>-->
-<!--        <filter-class>ru.job4j.cars.filter.AuthFilter</filter-class>-->
-<!--    </filter>-->
-<!--    <filter-mapping>-->
-<!--        <filter-name>AuthFilter</filter-name>-->
-<!--        <url-pattern>*.do</url-pattern>-->
-<!--    </filter-mapping>-->
 </web-app>

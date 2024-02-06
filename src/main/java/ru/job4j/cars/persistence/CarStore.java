@@ -38,6 +38,7 @@ public class CarStore extends AbstractStore<Car> {
                 session -> session.createQuery("select distinct c from Car c " +
                                         "join fetch c.engine e " +
                                         "join fetch c.brand b " +
+                                        "join fetch b.models bm " +
                                         "join fetch c.model m " +
                                         "join fetch c.body bd ",
                                 Car.class)

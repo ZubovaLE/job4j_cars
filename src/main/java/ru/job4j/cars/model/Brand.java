@@ -31,7 +31,7 @@ public class Brand {
     })
     private List<Model> models = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinTable(name = "brands_engines", joinColumns = {
             @JoinColumn(name = "brand_id", nullable = false)
     }, inverseJoinColumns = {

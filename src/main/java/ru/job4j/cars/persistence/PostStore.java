@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import ru.job4j.cars.model.Post;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class PostStore extends AbstractStore<Post> {
@@ -36,7 +37,14 @@ public class PostStore extends AbstractStore<Post> {
     @Override
     public List<Post> findAll() {
         return this.tx(
-                session -> session.createQuery("select distinct i from Post i inner join fetch i.car c")
+                session -> session.createQuery("select distinct p from Post p " +
+                                "join fetch p.car c " +
+                                "join fetch c.brand br " +
+                                "join fetch br.models bm " +
+                                "join fetch c.model m " +
+                                "join fetch c.body b " +
+                                "join fetch c.engine e " +
+                                "join fetch p.user u ", Post.class)
                         .list()
         );
     }
@@ -44,9 +52,15 @@ public class PostStore extends AbstractStore<Post> {
     @Override
     public Post findById(int id) {
         return this.tx(
-                session -> session.createQuery("select distinct i from Post i inner join fetch i.car c " +
-                                "where i.id = :iid", Post.class)
-                        .setParameter("iid", id)
+                session -> session.createQuery("select distinct p from Post p " +
+                                "join fetch p.car c " +
+                                "join fetch c.brand br " +
+                                "join fetch br.models bm " +
+                                "join fetch c.model m " +
+                                "join fetch c.body b " +
+                                "join fetch c.engine e " +
+                                "join fetch p.user u where p.id = :pid", Post.class)
+                        .setParameter("pid", id)
                         .uniqueResult()
         );
     }
@@ -65,28 +79,29 @@ public class PostStore extends AbstractStore<Post> {
     public List<Post> findNewPosts() {
         return this.tx(
                 session -> session.createQuery("select distinct p from Post p " +
-                        "join fetch p.car c " +
-                        "join fetch p.user u " +
-                        "where p.created  > :fTime", Post.class).setParameter("fTime",
-                        LocalDateTime.now().withHour(0).withMinute(0).withSecond(0)).list()
-        );
-    }
-
-    public List<Post> findPostsWithPhotos() {
-        return this.tx(
-                session -> session.createQuery("select distinct p from Post p " +
-                        "join fetch p.car c " +
-                        "join fetch p.user u " +
-                        "where p.photo is not null ", Post.class).list()
+                                "join fetch p.car c " +
+                                "join fetch c.brand br " +
+                                "join fetch br.models bm " +
+                                "join fetch c.model m " +
+                                "join fetch c.body b " +
+                                "join fetch c.engine e " +
+                                "join fetch p.user u where p.created >= date_trunc('DAY', current_date)", Post.class)
+                        .list()
         );
     }
 
     public List<Post> findPostsWithBrand(int brandId) {
         return this.tx(
                 session -> session.createQuery("select distinct p from Post p " +
-                        "join fetch p.car c " +
-                        "join fetch p.user u " +
-                        "where c.id = :cBrandId", Post.class).setParameter("cBrandId", brandId).list()
+                                "join fetch p.car c " +
+                                "join fetch c.brand br " +
+                                "join fetch br.models bm " +
+                                "join fetch c.model m " +
+                                "join fetch c.body b " +
+                                "join fetch c.engine e " +
+                                "join fetch p.user u where c.brand.id = :brandId", Post.class)
+                        .setParameter("brandId", brandId)
+                        .list()
         );
     }
 }

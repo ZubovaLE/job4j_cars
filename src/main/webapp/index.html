@@ -30,9 +30,10 @@
                 dataType: 'json'
             }).done(function (data) {
                 for (var post of data) {
+                    var sold = post.sold ? 'Продано' : 'Не продано';
                     $('#posts tr:last').after('<tr><td><a href=' + '/cars/post/post.html?id=' + post.id + '>'
-                        + post.car.brand + ' ' + post.car.model + '</a></td><td>' + post.created + '</td><td>' +
-                        post.price + '</td><td>' + post.user.name + '</td><td>' + post.sold + '</td></tr>');
+                        + post.car.brand.name + ' ' + post.car.model.name + '</a></td><td>' + post.created.toString() + '</td><td>' +
+                        post.price + '</td><td>' + post.user.name + '</td><td>' + sold + '</td></tr>');
                 }
                 if (posts === 'new') {
                     $('#new a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=new">Новые</a>');

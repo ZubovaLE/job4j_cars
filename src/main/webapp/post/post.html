@@ -29,15 +29,17 @@
                 url: 'http://localhost:8080/cars/post.do?id=' + id,
                 dataType: 'json'
             }).done(function (data) {
+                var brand = data.car.brand.name;
+                var model = data.car.model.name;
                 var done = data.sold ? 'Продано' : 'Не продано';
                 var postPhoto = data.photo;
                 var photo = postPhoto == null ? "Нет" : postPhoto;
-                $('#pageHeader h3:last').append(data.car.brand + ' ' + data.car.model);
+                $('#pageHeader h3:last').append(brand + ' ' + model);
                 $('#description h4:last').after('<p class="card-text">' + data.description + '</p>');
                 $('#created h4:last').after('<p class="card-text">' + data.created + '</p>');
-                $('#carBrand h4:last').after('<p class="card-text">' + data.brand + '</p>');
-                $('#carModel h4:last').after('<p class="card-text">' + data.model + '</p>');
-                $('#carBody h4:last').after('<p class="card-text">' + data.body + '</p>');
+                $('#carBrand h4:last').after('<p class="card-text">' + brand + '</p>');
+                $('#carModel h4:last').after('<p class="card-text">' + model + '</p>');
+                $('#carBody h4:last').after('<p class="card-text">' + data.body.name + '</p>');
                 $('#price h4:last').after('<p class="card-text">' + data.price + '</p>');
                 $('#photo h4:last').after('<p class="card-text">' + photo + '</p>');
                 $('#author h4:last').after('<p class="card-text">' + data.user.name + '</p>');
@@ -109,7 +111,7 @@
     <div class="card-body" id="buttons">
         <h4 class="card-title">Действия</h4>
         <button type="button" class="btn btn-primary" title="Пометить как продано" onclick="markAsSold()">
-            Отредактировать
+            Продано
         </button>
         <button type="button" class="btn btn-danger" title="Удалить объявление" onclick="deletePost()">Удалить
         </button>

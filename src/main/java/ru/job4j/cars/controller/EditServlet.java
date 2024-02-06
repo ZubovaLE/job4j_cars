@@ -29,53 +29,56 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
         String description = req.getParameter("description");
         int brand = Integer.parseInt(req.getParameter("brand"));
+        int engine = Integer.parseInt(req.getParameter("engine"));
         int model = Integer.parseInt(req.getParameter("model"));
         int body = Integer.parseInt(req.getParameter("body"));
         int price = Integer.parseInt(req.getParameter("price"));
-        int id = Integer.parseInt(req.getParameter("id"));
         if (id == 0) {
             User user = (User) req.getSession().getAttribute("user");
             Post post = Post.of(description, price);
-            Car car = Car.of(brandService.findById(brand), modelService.findById(model),
-                    bodyService.findById(body), engineService.findById(Integer.parseInt(req.getParameter("engine"))));
+            Car car = Car.of(brandService.findById(brand), modelService.findById(model), bodyService.findById(body),
+                    engineService.findById(engine));
             carService.add(car);
             post.setCar(car);
             post.setUser(user);
 
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            ServletContext servletContext = this.getServletConfig().getServletContext();
-            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            factory.setRepository(repository);
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            try {
-                List<FileItem> posts = upload.parseRequest(req);
-                File folder = new File("c:\\carImages\\");
-                if (!folder.exists()) {
-                    folder.mkdir();
-                }
-                StringBuilder sb;
-                for (FileItem item : posts) {
-                    sb = new StringBuilder();
-                    if (!item.isFormField()) {
-                        sb.append(folder);
-                        sb.append(File.separator);
-                        sb.append(id);
-                        sb.append(".");
-                        String format = item.getName().split("\\.")[1];
-                        sb.append(format);
-                        File file = new File(sb.toString());
-                        try (FileOutputStream out = new FileOutputStream(file)) {
-                            out.write(item.getInputStream().readAllBytes());
-                        }
-                        post.setPhoto(id + "." + format);
-                        postService.add(post);
+            if (req.getParameter("photo") != null) {
+                DiskFileItemFactory factory = new DiskFileItemFactory();
+                ServletContext servletContext = this.getServletConfig().getServletContext();
+                File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+                factory.setRepository(repository);
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                try {
+                    List<FileItem> posts = upload.parseRequest(req);
+                    File folder = new File("c:\\carImages\\");
+                    if (!folder.exists()) {
+                        folder.mkdir();
                     }
+                    StringBuilder sb;
+                    for (FileItem item : posts) {
+                        sb = new StringBuilder();
+                        if (!item.isFormField()) {
+                            sb.append(folder);
+                            sb.append(File.separator);
+                            sb.append(id);
+                            sb.append(".");
+                            String format = item.getName().split("\\.")[1];
+                            sb.append(format);
+                            File file = new File(sb.toString());
+                            try (FileOutputStream out = new FileOutputStream(file)) {
+                                out.write(item.getInputStream().readAllBytes());
+                            }
+                            post.setPhoto(id + "." + format);
+                        }
+                    }
+                } catch (FileUploadException e) {
+                    e.printStackTrace();
                 }
-            } catch (FileUploadException e) {
-                e.printStackTrace();
             }
+            postService.add(post);
         }
     }
 }
