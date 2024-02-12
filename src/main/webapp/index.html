@@ -24,6 +24,14 @@
     <script>
         $(document).ready(function () {
             var posts = window.location.href.split("=")[1];
+            var user;
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/authorization.do',
+                dataType: 'json'
+            }).done(function (data) {
+                user = data;
+            });
             $.ajax({
                 type: 'GET',
                 url: 'http://localhost:8080/cars/index.do?posts=' + posts,
@@ -48,6 +56,11 @@
                     $('#all a:last').replaceWith('<a class="nav-link active" href="/cars/?posts=all">Все</a>');
                     $('#new a:last').replaceWith('<a class="nav-link" href="/cars/?posts=new">Новые</a>');
                     showBrands(posts);
+                }
+
+                if (user != null) {
+                    $('#logOut a:last').replaceWith('<a class="nav-link" href="/cars/authorization.html">' + user.name +
+                        '|' + 'Выйти</a>');
                 }
             }).fail(function (err) {
                 console.log(err);
@@ -78,7 +91,26 @@
         }
 
         function addPost() {
-            window.location.href = '/cars/post/edit.html?id=0';
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/authorization.do',
+            }).done(function (data) {
+                window.location.href = '/cars/post/edit.html?id=0';
+                console.log(data);
+            }).fail(function (err) {
+                window.location.href = '/cars/authorization.html';
+            });
+        }
+
+        function logOut() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/cars/authorization.do?logOut=true',
+            }).done(function () {
+                $('#logOut a:last').replaceWith('<a class="nav-link" href="/cars/authorization.html">Войти</a>');
+            }).fail(function () {
+                window.location.href = '/cars/authorization.html';
+            });
         }
     </script>
     <title>Posts</title>
@@ -94,7 +126,7 @@
                 <a class="nav-link" href="/cars/?posts=new">Новые</a>
             </li>
             <li class="nav-item" id="logOut" style="text-align: right">
-                <a class="nav-link" href="/cars/authorization.html">Выйти</a>
+                <a class="nav-link" href="/cars/authorization.html">Войти</a>
             </li>
         </ul>
     </div>
@@ -111,7 +143,7 @@
         <tr>
             <th>Машина</th>
             <th>Дата создания</th>
-            <th>Цена</th>
+            <th>Цена, руб</th>
             <th>Автор</th>
             <th>Состояние</th>
         </tr>

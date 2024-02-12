@@ -39,7 +39,8 @@
                 $('#created h4:last').after('<p class="card-text">' + data.created + '</p>');
                 $('#carBrand h4:last').after('<p class="card-text">' + brand + '</p>');
                 $('#carModel h4:last').after('<p class="card-text">' + model + '</p>');
-                $('#carBody h4:last').after('<p class="card-text">' + data.body.name + '</p>');
+                $('#carBody h4:last').after('<p class="card-text">' + data.car.body.name + '</p>');
+                $('#engine h4:last').after('<p class="card-text">' + data.car.engine.model + '</p>');
                 $('#price h4:last').after('<p class="card-text">' + data.price + '</p>');
                 $('#photo h4:last').after('<p class="card-text">' + photo + '</p>');
                 $('#author h4:last').after('<p class="card-text">' + data.user.name + '</p>');
@@ -84,9 +85,6 @@
     <div class="card-body" id="description">
         <h4 class="card-title">Описание</h4>
     </div>
-    <div class="card-body" id="created">
-        <h4 class="card-title">Дата создания</h4>
-    </div>
     <div class="card-body" id="carBrand">
         <h4 class="card-title">Бренд</h4>
     </div>
@@ -95,6 +93,9 @@
     </div>
     <div class="card-body" id="carBody">
         <h4 class="card-title">Тип кузова</h4>
+    </div>
+    <div class="card-body" id="engine">
+        <h4 class="card-title">Двигатель</h4>
     </div>
     <div class="card-body" id="price">
         <h4 class="card-title">Цена</h4>
@@ -107,6 +108,9 @@
     </div>
     <div class="card-body" id="status">
         <h4 class="card-title">Состояние</h4>
+    </div>
+    <div class="card-body" id="created">
+        <h4 class="card-title">Дата создания</h4>
     </div>
     <div class="card-body" id="buttons">
         <h4 class="card-title">Действия</h4>
