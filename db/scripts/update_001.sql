@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS models_bodies
 CREATE TABLE IF NOT EXISTS cars
 (
     id        SERIAL PRIMARY KEY,
-    engine_id INT NOT NULL UNIQUE REFERENCES engines (id),
+    engine_id INT NOT NULL REFERENCES engines (id),
     brand_id  INT NOT NULL REFERENCES brands (id),
     model_id  INT NOT NULL REFERENCES models (id),
     body_id   INT NOT NULL REFERENCES bodies (id)

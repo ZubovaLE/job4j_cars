@@ -112,7 +112,7 @@
                 url: 'http://localhost:8080/cars/edit.do?id=' + id,
                 data: $('#postInfo').serialize()
             }).done(function () {
-                window.location.replace('/cars/?posts=all');
+                window.location.replace('http://localhost:8080/cars/?posts=all');
             }).fail(function (err) {
                 console.log(err);
             });

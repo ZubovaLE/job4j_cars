@@ -33,7 +33,7 @@ public class Car {
     @JoinColumn(name = "body_id", nullable = false)
     private Body body;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "engine_id")
     private Engine engine;
 
