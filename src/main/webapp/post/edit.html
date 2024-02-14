@@ -42,8 +42,8 @@
                     $('#brand:last').append('<option value=' + brand.id + '>' + brand.name + '</option>');
                 }
                 $('#pageHeader h3:last').append(pageHeader);
-                $('#postInfo div:last').after('<br><button type="submit" class="btn btn-primary" onclick="return validate()">' +
-                    buttonLabel + '</button>');
+                $('#postInfo div:last').after('<br><div style="text-align: center; margin-bottom: 20px"><button type="submit" class="btn btn-primary" onclick="return validate()">' +
+                    buttonLabel + '</button></div>');
             }).fail(function (err) {
                 console.log(err);
             });
@@ -119,62 +119,66 @@
         }
 
         function hideOrShowPhotoInput() {
-            // if ($('#photoCheckbox').checked) {
-            $('#photo').show();
-            // } else {
-            //     $('#photo').hide();
-            // }
+            if ($('#photoCheckbox').is(':checked')) {
+                $('#photo').show();
+            } else {
+                $('#photo').hide();
+            }
         }
     </script>
     <title>Editing</title>
 </head>
 <body>
 <div class="container">
-    <div class="row pt-3" id="pageHeader" style="text-align: center">
-        <h3></h3>
+    <div class="card">
+        <div class="card-header" id="pageHeader" style="text-align: center">
+            <h3></h3>
+        </div>
+        <div class="card-body">
+            <form id="postInfo">
+                <div class="form-group">
+                    <label for="description">Описание</label>
+                    <input type="text" class="form-control" id="description" name="description" value=""
+                           placeholder="Опишите машину" required/>
+                </div>
+                <div class="form-group">
+                    <label for="brand">Марка</label>
+                    <select id="brand" name="brand" onchange="showModelAndEngineDiv()">
+                        <option value="0">Не выбрано</option>
+                    </select>
+                </div>
+                <div class="form-group" id="engineDiv" style="display:none;">
+                    <label for="engine">Двигатель</label>
+                    <select id="engine" name="engine">
+                        <option value="0">Не выбрано</option>
+                    </select>
+                </div>
+                <div class="form-group" id="modelDiv" style="display:none;">
+                    <label for="model">Модель</label>
+                    <select id="model" name="model" onchange="showBodyDiv()">
+                        <option value="0">Не выбрано</option>
+                    </select>
+                </div>
+                <div class="form-group" id="bodyDiv" style="display:none;">
+                    <label for="body">Тип кузова</label>
+                    <select id="body" name="body">
+                        <option value="0">Не выбрано</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Цена, руб</label>
+                    <input type="number" class="form-control" id="price" name="price" required/>
+                </div>
+                <div class="form-group">
+                    <label for="photoCheckbox">Добавить фото</label>
+                    <input type="checkbox" onclick="hideOrShowPhotoInput()" id="photoCheckbox"/>
+                </div>
+                <div class="form-group" id="photoDiv">
+                    <input type="file" name="photo" id="photo" style="display: none">
+                </div>
+            </form>
+        </div>
     </div>
-    <form id="postInfo">
-        <div class="form-group">
-            <label for="description">Описание</label>
-            <input type="text" class="form-control" id="description" name="description" value=""
-                   placeholder="Опишите машину" required/>
-        </div>
-        <div class="form-group">
-            <label for="brand">Марка</label>
-            <select id="brand" name="brand" onchange="showModelAndEngineDiv()">
-                <option value="0">Не выбрано</option>
-            </select>
-        </div>
-        <div class="form-group" id="engineDiv" style="display:none;">
-            <label for="engine">Двигатель</label>
-            <select id="engine" name="engine">
-                <option value="0">Не выбрано</option>
-            </select>
-        </div>
-        <div class="form-group" id="modelDiv" style="display:none;">
-            <label for="model">Модель</label>
-            <select id="model" name="model" onchange="showBodyDiv()">
-                <option value="0">Не выбрано</option>
-            </select>
-        </div>
-        <div class="form-group" id="bodyDiv" style="display:none;">
-            <label for="body">Тип кузова</label>
-            <select id="body" name="body">
-                <option value="0">Не выбрано</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="price">Цена, руб</label>
-            <input type="number" class="form-control" id="price" name="price" required/>
-        </div>
-        <div class="form-group">
-            <label for="photoCheckbox">Добавить фото</label>
-            <input type="checkbox" onselect="hideOrShowPhotoInput()" id="photoCheckbox"/>
-        </div>
-        <div class="form-group" id="photoDiv">
-            <input type="file" name="photo" id="photo" style="display: none">
-        </div>
-    </form>
 </div>
 </body>
 <footer>
